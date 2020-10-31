@@ -1,0 +1,127 @@
+\ProvidesPackage{beamerthemegreenleaf169}
+% greenleaf theme for beamer
+
+\RequirePackage{graphicx}
+\RequirePackage{ifthen}
+\RequirePackage{geometry}
+
+\newif\ifbeamer@greenleaf@istypea
+\beamer@greenleaf@istypeafalse
+\DeclareOptionBeamer{typea}{\beamer@greenleaf@istypeatrue}
+
+\newif\ifbeamer@greenleaf@istypeb
+\beamer@greenleaf@istypebfalse
+\DeclareOptionBeamer{typeb}{\beamer@greenleaf@istypebtrue}
+
+\newif\ifbeamer@greenleaf@istypec
+\beamer@greenleaf@istypecfalse
+\DeclareOptionBeamer{typec}{\beamer@greenleaf@istypectrue}
+
+\ProcessOptionsBeamer
+
+\mode<presentation>
+
+\definecolor{mythemecolor}{rgb} {0.27,0.52,0.24}
+\setbeamercolor{frametitle}{fg=mythemecolor}
+\setbeamercolor{item}{fg=mythemecolor}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block title}{bg=mythemecolor!80!white, fg=white}
+\setbeamercolor{block body}{bg=mythemecolor!5!white, fg=black}
+\setbeamercolor{block title alerted}{bg=red!80!black, fg=white}
+\setbeamercolor{block body alerted}{bg=red!5!white, fg=black}
+\setbeamercolor{block title example}{bg=green!40!black, fg=white}
+\setbeamercolor{block body example}{bg=green!5!white, fg=black}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{author}{fg=black}
+\setbeamercolor{institute}{fg=black}
+\setbeamercolor{date}{fg=black}
+
+\ifthenelse{\boolean{beamer@greenleaf@istypea}}{
+  \newcommand{\titlefig}{images/gl169a_title.png}
+  \newcommand{\headerfig}{images/gl169a_header.png}
+  \newcommand{\noheaderfig}{images/gl169a_noheader.png}
+  \newcommand{\titleleft}{2cm}
+  \newcommand{\titleright}{1cm}
+  \newcommand{\titlebottom}{2cm}
+  \newcommand{\headerleft}{1.5cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{5cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1cm]
+}
+{
+\ifthenelse{\boolean{beamer@greenleaf@istypeb}}{
+  \newcommand{\titlefig}{images/gl169b_title.png}
+  \newcommand{\headerfig}{images/gl169b_header.png}
+  \newcommand{\noheaderfig}{images/gl169b_noheader.png}
+  \newcommand{\titleleft}{1cm}
+  \newcommand{\titleright}{1cm}
+  \newcommand{\titlebottom}{3cm}
+  \newcommand{\headerleft}{1cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{3cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1.5cm]
+}
+{
+\ifthenelse{\boolean{beamer@greenleaf@istypec}}{
+  \newcommand{\titlefig}{images/gl169c_title.png}
+  \newcommand{\headerfig}{images/gl169c_header.png}
+  \newcommand{\noheaderfig}{images/gl169c_noheader.png}
+  \newcommand{\titleleft}{2cm}
+  \newcommand{\titleright}{1cm}
+  \newcommand{\titlebottom}{2cm}
+  \newcommand{\headerleft}{1.5cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{4cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1cm]
+}
+{
+  \newcommand{\titlefig}{images/gl169a_title.png}
+  \newcommand{\headerfig}{images/gl169a_header.png}
+  \newcommand{\noheaderfig}{images/gl169a_noheader.png}
+  \newcommand{\titleleft}{2cm}
+  \newcommand{\titleright}{1cm}
+  \newcommand{\titlebottom}{2cm}
+  \newcommand{\headerleft}{1.5cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{5cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1cm]
+}}}
+\newcommand{\setbackground}[1]{\usebackgroundtemplate{
+  \includegraphics[width=\paperwidth,height=\paperheight]{#1}
+}}
+\setbeamercolor{footline}{fg=black}
+\newcommand{\hidefootline}{\setbeamertemplate{footline}{}}
+\newcommand{\showfootline}{\setbeamertemplate{footline}{
+  \begin{beamercolorbox}[wd=\paperwidth,ht=4ex,center]{frame number}
+  \usebeamerfont{footline}\usebeamercolor[fg]{footline}
+  \insertframenumber / \inserttotalframenumber
+  \vspace{10ex}
+  \end{beamercolorbox}
+}}
+\setbeamerfont{author}{size=\footnotesize}
+
+\makeatletter
+\define@key{beamerframe}{title}[true]{
+  \newgeometry{top=0cm,bottom=\titlebottom,left=\titleleft,right=\titleright}
+  \setbackground{\titlefig}
+  \hidefootline
+}
+\define@key{beamerframe}{header}[true]{
+  \newgeometry{top=0cm,bottom=0cm,left=\headerleft,right=\headerright}
+  \setbackground{\headerfig}
+  \showfootline
+}
+\define@key{beamerframe}{noheader}[true]{
+  \newgeometry{top=0cm,bottom=0cm,left=\noheaderleft,right=\noheaderright}
+  \setbackground{\noheaderfig}
+  \showfootline
+}
+\makeatother
+
+\mode<all>

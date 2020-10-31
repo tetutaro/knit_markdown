@@ -1,0 +1,145 @@
+\ProvidesPackage{beamerthemeredflowerpandoc}
+% redflower theme for beamer espesially pandoc
+
+\RequirePackage{graphicx}
+\RequirePackage{ifthen}
+\RequirePackage{geometry}
+\RequirePackage{xkeyval}
+
+\newif\ifbeamer@redflower@istypea
+\beamer@redflower@istypeafalse
+\DeclareOptionBeamer{typea}{\beamer@redflower@istypeatrue}
+
+\newif\ifbeamer@redflower@istypeb
+\beamer@redflower@istypebfalse
+\DeclareOptionBeamer{typeb}{\beamer@redflower@istypebtrue}
+
+\newif\ifbeamer@redflower@istypec
+\beamer@redflower@istypecfalse
+\DeclareOptionBeamer{typec}{\beamer@redflower@istypectrue}
+
+\ProcessOptionsBeamer
+
+\mode<presentation>
+
+\definecolor{mythemecolor}{rgb} {0.87,0.25,0.57}
+\setbeamercolor{frametitle}{fg=mythemecolor}
+\setbeamercolor{item}{fg=mythemecolor}
+\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{bibliography item}[text]
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block title}{bg=mythemecolor!80!white, fg=white}
+\setbeamercolor{block body}{bg=mythemecolor!5!white, fg=black}
+\setbeamercolor{block title alerted}{bg=red!80!black, fg=white}
+\setbeamercolor{block body alerted}{bg=red!5!white, fg=black}
+\setbeamercolor{block title example}{bg=green!40!black, fg=white}
+\setbeamercolor{block body example}{bg=green!5!white, fg=black}
+\setbeamercolor{title}{fg=black}
+\setbeamercolor{author}{fg=black}
+\setbeamercolor{institute}{fg=black}
+\setbeamercolor{date}{fg=black}
+
+\ifthenelse{\boolean{beamer@redflower@istypea}}{
+  \newcommand{\titlefig}{images/rfa_title.png}
+  \newcommand{\headerfig}{images/rfa_header.png}
+  \newcommand{\noheaderfig}{images/rfa_noheader.png}
+  \newcommand{\titleleft}{1cm}
+  \newcommand{\titleright}{2.5cm}
+  \newcommand{\titlebottom}{2cm}
+  \newcommand{\headerleft}{1.5cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{3.5cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1cm]
+}
+{
+\ifthenelse{\boolean{beamer@redflower@istypeb}}{
+  \newcommand{\titlefig}{images/rfb_title.png}
+  \newcommand{\headerfig}{images/rfb_header.png}
+  \newcommand{\noheaderfig}{images/rfb_noheader.png}
+  \newcommand{\titleleft}{3cm}
+  \newcommand{\titleright}{1cm}
+  \newcommand{\titlebottom}{0cm}
+  \newcommand{\headerleft}{1cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{4.5cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1.5cm]
+  \defbeamertemplate*{title page}{customized}[1][]{%
+    \vspace*{0.3\paperheight}
+    \begin{center}
+    \usebeamerfont{title}\inserttitle\par
+    \usebeamerfont{subtitle}\insertsubtitle\par
+    \bigskip
+    \usebeamerfont{author}\insertauthor\par
+    \bigskip
+    \usebeamerfont{institute}\insertinstitute\par
+    \bigskip
+    \usebeamerfont{date}\insertdate
+    \end{center}
+  }
+}
+{
+\ifthenelse{\boolean{beamer@redflower@istypec}}{
+  \newcommand{\titlefig}{images/rfc_title.png}
+  \newcommand{\headerfig}{images/rfc_header.png}
+  \newcommand{\noheaderfig}{images/rfc_noheader.png}
+  \newcommand{\titleleft}{2cm}
+  \newcommand{\titleright}{1cm}
+  \newcommand{\titlebottom}{2cm}
+  \newcommand{\headerleft}{1cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{3cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1.5cm]
+}
+{
+  \newcommand{\titlefig}{images/rfa_title.png}
+  \newcommand{\headerfig}{images/rfa_header.png}
+  \newcommand{\noheaderfig}{images/rfa_noheader.png}
+  \newcommand{\titleleft}{1cm}
+  \newcommand{\titleright}{2.5cm}
+  \newcommand{\titlebottom}{2cm}
+  \newcommand{\headerleft}{1.5cm}
+  \newcommand{\headerright}{1cm}
+  \newcommand{\noheaderleft}{3.5cm}
+  \newcommand{\noheaderright}{1cm}
+  \setbeamertemplate{frametitle}[default][left,leftskip=1cm]
+}}}
+\newcommand{\setbackground}[1]{\usebackgroundtemplate{
+  \includegraphics[width=\paperwidth,height=\paperheight]{#1}
+}}
+\setbeamercolor{footline}{fg=black}
+\newcommand{\hidefootline}{\setbeamertemplate{footline}{}}
+\newcommand{\showfootline}{\setbeamertemplate{footline}{
+  \begin{beamercolorbox}[wd=\paperwidth,ht=4ex,center]{frame number}
+  \usebeamerfont{footline}\usebeamercolor[fg]{footline}
+  \insertframenumber / \inserttotalframenumber
+  \vspace{10ex}
+  \end{beamercolorbox}
+}}
+\setbeamerfont{author}{size=\footnotesize}
+
+\makeatletter
+\define@choicekey+{beamerframe}{label}[\val\nr]{title,header,noheader}{%
+  \ifcase\nr\relax
+    \newgeometry{top=0cm,bottom=\titlebottom,left=\titleleft,right=\titleright}
+    \setbackground{\titlefig}
+    \hidefootline
+  \or
+    \newgeometry{top=0cm,bottom=0cm,left=\headerleft,right=\headerright}
+    \setbackground{\headerfig}
+    \showfootline
+  \or
+    \newgeometry{top=0cm,bottom=0cm,left=\noheaderleft,right=\noheaderright}
+    \setbackground{\noheaderfig}
+    \showfootline
+  \fi
+}{%
+    \newgeometry{top=0cm,bottom=0cm,left=\headerleft,right=\headerright}
+    \setbackground{\headerfig}
+    \showfootline
+}
+\makeatother
+
+\mode<all>
