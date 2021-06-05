@@ -224,13 +224,13 @@ bib: sample.bib
 
 ### whitesnow - a
 
-![](beamer/samples/ws169a.gif)
+<img src="beamer/samples/ws169a.gif" width=534>
 
 ### whitesnow - b
 
-![](beamer/samples/ws169b.gif)
+<img src="beamer/samples/ws169a.gif" width=534>
 
 ### whitesnow - c
 
-![](beamer/samples/ws169c.gif)
+<img src="beamer/samples/ws169a.gif" width=534>
 
