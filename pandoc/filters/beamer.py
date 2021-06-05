@@ -46,9 +46,9 @@ def action(elem, doc):
                     'theorem', 'example', 'definition', 'proof'
                 ]:
                     blocktype = cname
-                    blocktitle = ''.join([
-                        pf.stringify(x) for x in elem.content.list
-                    ])
+            blocktitle = ''.join([
+                pf.stringify(x) for x in elem.content.list
+            ])
             if blocktype == '':
                 blocktype = 'labeledblock'
             elif blocktype == 'alertblock':
