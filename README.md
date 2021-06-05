@@ -228,9 +228,9 @@ bib: sample.bib
 
 ### whitesnow - b
 
-<img src="beamer/samples/ws169a.gif" width=534>
+<img src="beamer/samples/ws169b.gif" width=534>
 
 ### whitesnow - c
 
-<img src="beamer/samples/ws169a.gif" width=534>
+<img src="beamer/samples/ws169c.gif" width=534>
 
