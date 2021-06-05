@@ -143,42 +143,6 @@ if ($^O eq 'darwin') {
 
 - `> brew install skim`
 
-## ヘッダの書き方
-
-各 Markdown の先頭に YAML を書くことによって、タイトルなどのヘッダを生成できる。YAML は `---` という行で囲む必要がある。
-
-（例）
-```
----
-title: タイトル
-subtitle: サブタイトル
-author: 著者
-institute: 所属
-date: \jtoday
-pandoctheme: bluewave
-themetype: a
-bib: sample.bib
----
-```
-
-- `title`: タイトル
-- `subtitle`: サブタイトル
-- `author`: 著者
-- `institute`: 所属
-    - beamerのみ
-- `data`: 日付
-    - `\jtoday`とすることで `YYYY/MM/DD` 形式のコンパイル当日の日付になる
-- `pandoctheme`: beamerのテーマ名
-    - beamerのみ
-    - `bluewave`, `greenleaf`, `redflower`, `whitesnow` のいずれか
-- `themetype`: beamerのテーマ内のタイプ
-    - beamerのみ
-    - `a`, `b`, `c` のいずれか
-- `bib`: 参考文献が書かれたファイル名
-    - 必要な場合のみ
-    - 本文中で参照があった参考文献のみが表示される
-    - 書き方は [Wikipedia - BibTex](https://ja.wikipedia.org/wiki/BibTeX) に詳しい
-
 ## Markdown の書き方
 
 [sampleディレクトリ](samples) 内の md ファイル、
