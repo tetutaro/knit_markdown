@@ -5,8 +5,8 @@ import panflute as pf
 is_in_block = None
 
 
-def inlatex(s):
-    return pf.RawInline('latex', s)
+def inlatex(text: str) -> pf.RawInline:
+    return pf.RawInline(text=text, format='latex')
 
 
 def action(elem, doc):
@@ -14,85 +14,69 @@ def action(elem, doc):
     if isinstance(elem, pf.Header):
         ret = list()
         if is_in_block is not None:
-            ret.append(pf.Para([inlatex(r"\end{%s}" % is_in_block)]))
+            ret.append(pf.Para(inlatex(r"\end{%s}" % is_in_block)))
             is_in_block = None
-        [level, classes, contents_list] = elem.value
-        [label, class_names, class_options] = classes
-        if level == 3:
+        if elem.level == 3:
             blocktype = ''
             blocktitle = ''
-            for cname in class_names:
+            for cname in elem.classes:
                 if cname in [
                     'block', 'alertblock', 'exampleblock',
                     'theorem', 'example', 'definition', 'proof'
                 ]:
                     blocktype = cname
-                    blocktitle = pf.stringify(contents_list)
+                    blocktitle = ''.join([
+                        pf.stringify(x) for x in elem.content.list
+                    ])
             if blocktype != '':
                 is_in_block = blocktype
-                latexstr = r"\begin{%s}" % blocktype
+                latexstr = r'\begin{%s}' % blocktype
                 if blocktitle != '':
-                    latexstr += "[%s]" % blocktitle
-                if label != '':
-                    latexstr += r" \label{%s}" % label
-                ret.append(pf.Para([inlatex(latexstr)]))
+                    latexstr += '[%s]' % blocktitle
+                if ':' in elem.identifier:
+                    latexstr += r' \label{%s}' % elem.identifier
+                ret.append(pf.Para(inlatex(latexstr)))
             else:
-                ret.append(pf.Header(3, classes, contents_list))
+                ret.append(elem)
         else:
-            ret.append(pf.Header(level, classes, contents_list))
+            if len(ret) == 0:
+                return
+            ret.append(elem)
         return ret
     elif isinstance(elem, pf.CodeBlock):
         ret = list()
         if is_in_block is not None:
-            ret.append(pf.Para([inlatex(r"\end{%s}" % is_in_block)]))
+            ret.append(pf.Para(inlatex(r'\end{%s}' % is_in_block)))
             is_in_block = None
-        [classes, contents_list] = elem.value
-        [label, class_names, class_options] = classes
-        caption, _, _ = pf.get_caption(class_options)
-        caption = pf.stringify(caption)
-        if caption == '':
-            ret.append(pf.Para([inlatex(r"\begin{codeblock}")]))
+        caption = elem.attributes.get('caption')
+        if caption is None:
+            ret.append(pf.Para(inlatex(r'\begin{codeblock}')))
         else:
-            ret.append(pf.Para([inlatex(r"\begin{codeblock}[%s]" % caption)]))
-        ret.append(pf.CodeBlock(classes, contents_list))
-        ret.append(pf.Para([inlatex(r"\end{codeblock}")]))
+            ret.append(pf.Para(inlatex(r'\begin{codeblock}[%s]' % caption)))
+        ret.append(elem)
+        ret.append(pf.Para(inlatex(r'\end{codeblock}')))
         return ret
     elif isinstance(elem, pf.RawBlock):
-        [rawtype, contents] = elem.value
-        if contents.startswith('<!--') and is_in_block is not None:
+        if elem.text.startswith('<!--') and is_in_block is not None:
             ret = list()
-            ret.append(pf.Para([inlatex("\\end{%s}" % is_in_block)]))
-            ret.append(pf.RawBlock(rawtype, contents))
+            ret.append(pf.Para(inlatex(r'\end{%s}' % is_in_block)))
+            ret.append(elem)
             is_in_block = None
             return ret
-    elif isinstance(elem, pf.Para):
+    elif isinstance(elem, pf.Math):
+        if elem.format == 'InlineMath':
+            return
         ret = list()
-        normal_contents = list()
-        for c in elem.value:
-            if c["t"] == 'Math' and c["c"][0]["t"] == 'DisplayMath':
-                math_content = c["c"][1]
-                if '&' in math_content or '\\\\' in math_content:
-                    math_environ = 'align'
-                else:
-                    math_environ = 'equation'
-                if len(normal_contents) > 0 and (
-                    normal_contents[-1]["t"] == 'SoftBreak'
-                ):
-                    normal_contents.pop()
-                if len(normal_contents) > 0:
-                    ret.append(pf.Para(normal_contents))
-                    normal_contents = list()
-                new_content = "\\begin{%s}" % math_environ
-                new_content += math_content
-                new_content += "\\end{%s}" % math_environ
-                ret.append(pf.RawBlock("latex", new_content))
-            elif c["t"] == 'SoftBreak' and len(normal_contents) == 0:
-                pass
-            else:
-                normal_contents.append(c)
-        if len(normal_contents) > 0:
-            ret.append(pf.Para(normal_contents))
-        return ret
+        math_content = elem.text
+        if '&' in math_content or r'\\' in math_content:
+            math_environ = 'align'
+        else:
+            math_environ = 'equation'
+        new_content = r'\begin{%s} ' % math_environ
+        new_content += math_content
+        new_content += r'\end{%s}' % math_environ
+        return pf.RawInline(new_content, format='latex')
+    return
 
 
 def main(doc=None):

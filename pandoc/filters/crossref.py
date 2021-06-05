@@ -1,14 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding:utf-8 -*-
+from __future__ import annotations
 import re
 import panflute as pf
 
 
-def inlatex(s):
-    return pf.RawInline('latex', s)
-
-
-def get_label(label):
+def get_label(label: str) -> str:
+    label = label.replace('[', '').replace(']', '').replace('@', '')
     if ':' in label:
         reftype = label.split(':')[0]
         if reftype == 'sec' or reftype == 'section':
@@ -29,17 +27,17 @@ def get_label(label):
             refcommand = 'ref'
     else:
         refcommand = 'cite'
-    return(inlatex(r"\%s{%s}" % (refcommand, label)))
+    return r'\%s{%s}' % (refcommand, label)
 
 
 class PandocContents():
-    def __init__(self, text):
-        self.contents = list()
+    def __init__(self: PandocContents, text: str) -> None:
+        self.contents = ''
         self.id = None
         self.classes = list()
         self.keyvals = dict()
-        attr = re.compile(r'{(.+?)}')
-        attrs = ' '.join(attr.findall(text)).split(' ')
+        attr_pattern = re.compile(r'{(.+?)}')
+        attrs = (' '.join(attr_pattern.findall(text))).split(' ')
         for att in attrs:
             if att.startswith('#'):
                 self.id = att[1:]
@@ -48,65 +46,71 @@ class PandocContents():
             elif '=' in att:
                 keyvals = att.split("=")
                 self.keyvals[keyvals[0]] = keyvals[1]
-        ref = re.compile(r'[@(.+?)]')
-        for c in re.split(r's+', attr.sub('', str).strip()):
+        ref_pattern = re.compile(r'[@(.+?)]')
+        for c in re.split(r'\s+', attr_pattern.sub('', text).strip()):
             if len(c) == 0:
                 pass
             if len(self.contents) > 0:
-                self.contents.append(pf.Space())
+                self.contents += ' '
             start = 0
             end = len(c)
             while start < end:
-                tref = ref.search(c, start, end)
+                tref = ref_pattern.search(c, start, end)
                 if tref is None:
-                    self.contents.append(pf.Str(c[start:end]))
+                    self.contents += c[start:end]
                     start = end
                 else:
                     if tref.start() > start:
-                        self.contents.append(pf.Str(c[start:tref.start()]))
-                    label = ref.split(c[tref.start():tref.end()])[1]
-                    self.contents.append(get_label(label))
+                        self.contents += c[start:tref.start()]
+                    label = ref_pattern.split(
+                        c[tref.start():tref.end()]
+                    )[1]
+                    self.contents += get_label(label)
                     start = tref.end()
         return
 
-    def get_contents_with_label(self):
+    def get_string_with_label(self) -> str:
         contents = self.contents[:]
         if self.id is not None:
-            contents.append(inlatex(r"\label{%s}" % self.id))
+            contents += r' \label{%s}' % self.id
         if len(contents) == 0:
-            return []
+            return ''
         return contents
+
+    def get_caption_with_label(self) -> pf.Caption:
+        ret = list()
+        ret.append(pf.Str(self.contents))
+        if self.id is not None:
+            ret.append(pf.Space())
+            ret.append(pf.RawInline(
+                r'\label{%s}' % self.id, format='latex'
+            ))
+        return pf.Caption(pf.Para(*ret))
 
 
 def action(elem, doc):
-    if isinstance(elem, pf.Table):
-        if len(elem.caption) == 0:
+    if isinstance(elem, pf.Caption):
+        caption = elem.content.to_json()[0]['c'][0]['c']
+        if len(caption) == 0:
             return
-        caption = PandocContents(pf.stringify(elem.caption))
-        return [pf.Table(
-            caption.get_contents_with_label(),
-            elem.alignment, elem.data, elem.header, elem.rows
-        )]
+        return PandocContents(
+            caption
+        ).get_caption_with_label()
     elif isinstance(elem, pf.Math):
-        if elem.value[0]["t"] == 'DisplayMath':
-            [mathtype, mathcode] = elem.value
         attr = re.compile(r'{#(.+?)}')
-        if attr.search(mathcode) is None:
+        if attr.search(elem.text) is None:
             return
-        labels = attr.findall(mathcode)
+        labels = attr.findall(elem.text)
+        mathcode = elem.text
         for label in labels:
-            ml = r"\\\\label{%s}" % label
+            ml = r'\\label{%s}' % label
             mathcode = attr.sub(ml, mathcode, count=1)
-        return [pf.Math(mathtype, mathcode)]
+        return pf.Math(text=mathcode, format=elem.format)
     elif isinstance(elem, pf.Cite):
-        ret = list()
-        [citeinfo, contents] = elem.value
-        for ci in citeinfo:
-            label = ci['citationId']
-            ret.append(get_label(label))
-        if len(ret) > 0:
-            return ret
-        return
+        label = get_label(
+            ''.join([pf.stringify(x) for x in elem.content.list])
+        )
+        return [pf.RawInline(label, format='latex')]
 
 
 def main(doc=None) -> None:
