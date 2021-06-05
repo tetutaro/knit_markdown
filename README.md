@@ -181,7 +181,7 @@ bib: sample.bib
 
 ## Markdown の書き方
 
-[sampleディレクトリ](tree/main/samples) 内の md ファイル、
+[sampleディレクトリ](samples) 内の md ファイル、
 もしくはそれを `knit_markdown` で変換したPDFを参照のこと
 
 ## beamer テーマのサンプル
