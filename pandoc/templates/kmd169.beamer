@@ -16,7 +16,7 @@ $endif$
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{theorems}[numbered]
 \setbeamertemplate{caption}[numbered]
-\usepackage[sfdefault]{noto}
+\usepackage[noto]{pxchfon}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{amssymb,amsmath}
