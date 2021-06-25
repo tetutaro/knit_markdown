@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 def setup_package():
     metadata = dict()
     metadata['name'] = 'kmd-filters'
-    metadata['version'] = '0.1.0'
+    metadata['version'] = '0.2.0'
     metadata['description'] = 'pandocfilters for knit_markdown'
     metadata['author'] = 'tetutaro'
     metadata['url'] = 'https://github.com/tetutaro/knit_markdown'

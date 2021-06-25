@@ -98,6 +98,12 @@ def action(elem, doc):
         new_content += math_content
         new_content += r'\end{%s}' % math_environ
         return pf.RawInline(new_content, format='latex')
+    elif isinstance(elem, pf.Image):
+        return [
+            pf.RawInline(r'\begin{center}', format='latex'),
+            elem,
+            pf.RawInline(r'\end{center}', format='latex'),
+        ]
     return
 
 
