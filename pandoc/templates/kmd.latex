@@ -1,5 +1,5 @@
 \documentclass[12pt,a4j,dvipdfmx,uplatex]{jsarticle}
-\usepackage[noto]{pxchfon}
+\usepackage[sfdefault]{noto}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{amssymb,amsmath}
