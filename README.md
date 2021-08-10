@@ -24,9 +24,17 @@ This tool supports Japanese only
 
 - `> ./install.sh`
 
+pipx を使っているならば
+
+- `> ./install_pipx.sh`
+
 ## アンインストール方法
 
 - `> ./uninstall.sh`
+
+pipx を使っているならば
+
+- `> ./uninstall_pipx.sh`
 
 ## 使い方
 
