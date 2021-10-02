@@ -3,6 +3,12 @@
 import os
 import subprocess
 import argparse
+import platform
+
+if platform.system() == 'Linux':
+    SED_CMND = 'sed -e'
+else:
+    SED_CMND = 'sed -i "" -e'
 
 
 def cleanup(bname: str, ext: str) -> None:
@@ -37,12 +43,10 @@ def convert(bname: str, ext: str) -> None:
                 '-t beamer {fname}',
                 '-o {bname}.tex',
                 '&&',
-                'sed -i ""',
-                '-e "s/fragile/containsverbatim/g"',
+                f'{SED_CMND} "s/fragile/containsverbatim/g"',
                 '{bname}.tex',
                 '&&',
-                'sed -i ""',
-                '-e "s/\\\\\\\\\\\\\\\\label/\\\\\\\\label/g"',
+                f'{SED_CMND} "s/\\\\\\\\\\\\\\\\label/\\\\\\\\label/g"',
                 '{bname}.tex',
                 '&&',
                 'latexmk -pv {bname}.tex',
@@ -56,12 +60,10 @@ def convert(bname: str, ext: str) -> None:
                 '-t beamer {fname}',
                 '-o {bname}.tex',
                 '&&',
-                'sed -i ""',
-                '-e "s/fragile/containsverbatim/g"',
+                f'{SED_CMND} "s/fragile/containsverbatim/g"',
                 '{bname}.tex',
                 '&&',
-                'sed -i ""',
-                '-e "s/\\\\\\\\\\\\\\\\label/\\\\\\\\label/g"',
+                f'{SED_CMND} "s/\\\\\\\\\\\\\\\\label/\\\\\\\\label/g"',
                 '{bname}.tex',
                 '&&',
                 'latexmk -pv {bname}.tex',
@@ -75,12 +77,11 @@ def convert(bname: str, ext: str) -> None:
                 '-t latex {fname}',
                 '-o {bname}.tex',
                 '&&',
-                'sed -i ""',
-                '-e "s/@{{}}//g"',
+                f'{SED_CMND}',
+                '"s/@{{}}//g"',
                 '{bname}.tex',
                 '&&',
-                'sed -i ""',
-                '-e "s/\\\\\\\\\\\\\\\\label/\\\\\\\\label/g"',
+                f'{SED_CMND} "s/\\\\\\\\\\\\\\\\label/\\\\\\\\label/g"',
                 '{bname}.tex',
                 '&&',
                 'latexmk -pv {bname}.tex'

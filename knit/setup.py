@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 def setup_package() -> None:
     metadata = dict()
     metadata['name'] = 'knit_markdown'
-    metadata['version'] = '0.1.0'
+    metadata['version'] = '0.2.0'
     metadata['description'] = 'convert from markdown(tex) to PDF'
     metadata['author'] = 'tetutaro'
     metadata['url'] = 'https://github.com/tetutaro/knit_markdown'
