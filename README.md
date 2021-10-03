@@ -6,35 +6,46 @@ This tool supports Japanese only
 
 ## 特徴
 
-- Markdown を書くだけで、通常のPDFやプレゼンテーション用のPDFを作れる
-    - プレゼンテーションの生成には LaTeX の beamer を用いている
-- プレゼンテーションのテーマを簡単に変更できる
-- 各種参照を簡単に書け、良い感じに出力される
-- カラフルなブロックを簡単に作れる
-- 生成はコマンド一発
+* Markdown を書くだけで、通常のPDFやプレゼンテーション用のPDFを作れる
+    * プレゼンテーションの生成には LaTeX の beamer を用いている
+* プレゼンテーションのテーマを簡単に変更できる
+* 各種参照を簡単に書け、良い感じに出力される
+* カラフルなブロックを簡単に作れる
+* 生成はコマンド一発
 
 ## 必要なもの（テストした環境）
 
-- Tex Live 2021 （2018とかでも大丈夫なはず）
-- pandoc 2.14.0.1 （少なくとも 2.11 以上が必要）
-- Python 3.9.5 （3.7以降であれば大丈夫なはず）
-- panflute 2.1.0 （pandocのバージョンに対応したもの）
+* TexLive 2021 （2018とかでも大丈夫なはず）
+    * [この](https://github.com/tetutaro/dotfiles/tree/main/latex)方法でインストールしていることを前提としている
+* pandoc 2.14.0.1 （少なくとも 2.11 以上が必要）
+    * Linux (Ubuntu) の場合
+        * [GitHub Repository](https://github.com/jgm/pandoc/releases) から最新版をダウンロードして入れる
+    * Mac OSX の場合
+        * `> brew install pandoc`
+* Python 3.9.5 （3.7以降であれば大丈夫なはず）
+* pipx
+    * Linux (Ubuntu) の場合
+        * `> /bin/pip3 install pipx --user`
+    * Mac OSX の場合
+        * `> brew install pipx`
+    * `PATH` 環境変数に `${HOME}/.local/bin` を加える
+    * `> pipx ensurepath`
 
 ## インストール方法
 
-- `> ./install.sh`
-
-pipx を使っているならば
-
-- `> ./install_pipx.sh`
+* Linux (Ubuntu) の場合
+    * `> sudo ./install_system.sh`
+* Mac OSX の場合
+    * `> ./install_system.sh`
+- `> ./install_user.sh`
 
 ## アンインストール方法
 
-- `> ./uninstall.sh`
-
-pipx を使っているならば
-
-- `> ./uninstall_pipx.sh`
+* Linux (Ubuntu) の場合
+    * `> sudo ./uninstall_system.sh`
+* Mac OSX の場合
+    * `> ./uninstall_system.sh`
+- `> ./uninstall_user.sh`
 
 ## 使い方
 
@@ -67,89 +78,6 @@ optional arguments:
     - `${TEXMFLOCAL}/tex/latex/beamer/themes` 以下
 - 変換コマンド
     - Python package `knit-markdown`
-
-## 準備（Macの場合）
-
-### Tex Live
-
-- `> brew cask install basictex`
-- `> brew install ghostscript`
-- `> eval "$(/usr/libexec/path_helper)"`
-- `/usr/libexec/path_helper` の結果を `.zshrc` 等に追加する
-- `> sudo tlmgr update --self --all`
-- `> sudo tlmgr paper a4`
-- `> sudo tlmgr repository add http://contrib.texlive.info/current tlcontrib`
-- `> sudo tlmgr pinning add tlcontrib "*"`
-- `> sudo tlmgr install collection-langjapanese`
-- `> sudo tlmgr install collection-fontsrecommended`
-- `> sudo tlmgr install collection-latexextra`
-- `> sudo tlmgr install collection-fontsextra`
-- `> sudo tlmgr install latexmk`
-- `> sudo tlmgr install japanese-otf-nonfree`
-- `> sudo tlmgr install japanese-otf-uptex-nonfree`
-- `> sudo tlmgr install cjk-gs-integrate-macos`
-- `> sudo tlmgr install ptex-fontmaps-macos`
-- `> sudo tlmgr install noto`
-- `> sudo tlmgr install biblatex`
-- `> sudo tlmgr install biber`
-- `> sudo cjk-gs-integrate --link-texmf --cleanup`
-- `> sudo cjk-gs-integrate-macos --link-texmf`
-- `kpsewhich -var-value TEXMFLOCAL` の結果を以降 `${TEXMFLOCAL}` とする
-- `> cd ${TEXMFLOCAL}`
-- `> cd ..`
-- `> sudo chown -R ${USER}:admin texmf-local`
-- `${TEXMFLOCAL}/../texmf.cnf` に以下を追加
-
-```
-shell_escape_commands = \
-bibtex,bibtex8,bibtexu,upbibtex,biber,\
-kpsewhich, makeindex,mendex,texindy,\
-mpost,upmpost,\
-repstopdf,epspdf,extractbb
-```
-
-- `$TEXMFLOCAL/fonts/map/dvipdfmx/noto/map` を以下のように作成
-
-```
-uprml-h unicode NotoSansCJKjp-Regular.otf
-uprml-v unicode NotoSansCJKjp-Regular.otf
-upgbm-h unicode NotoSansCJKjp-Bold.otf
-upgbm-v unicode NotoSansCJKjp-Bold.otf
-```
-
-### pandoc
-
-- `> brew install pandoc`
-
-### panflute
-
-- `> pip install panflute`
-
-### latexmk の設定
-
-`~/.latexmkrc` を以下のように作成
-
-```
-$latex = 'uplatex -file-line-error -halt-on-error -interaction=nonstopmode -synctex=1 %O %S';
-$biber = 'biber %O --bblencoding=utf8 -u -U --output_safechars %B';
-$bibtex = 'upbibtex %O %B';
-$makeindex = 'upmendex %O -o %D %S';
-$dvipdf = 'dvipdfmx -f noto.map %O -o %D %S';
-$max_repeat = 3;
-$pdf_mode = 3;
-$pvc_view_file_via_temporary = 0;
-if ($^O eq 'darwin') {
-    $pdf_previewer = 'open -ga /Applications/Skim.app';
-} elsif ($^O eq 'linux') {
-    $pdf_previewer = 'xdg-open';
-}
-```
-
-（上記はMacでのPDFビューアーとして Skim を用いる場合）
-
-### Skim
-
-- `> brew install skim`
 
 ## Markdown の書き方
 

@@ -19,4 +19,4 @@ cd ${local_image_path}
 for file in *.png; do
 	cp ${local_image_path}/${file} ${texmf_image_path}/.
 done
-sudo mktexlsr
+mktexlsr

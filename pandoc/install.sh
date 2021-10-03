@@ -8,4 +8,4 @@ cd ${pwd}/templates
 for file in *; do
 	cp ${pwd}/templates/${file} ${pandoc_template_path}/.
 done
-cd ${pwd}/filters && python3 setup.py install
+cd ${pwd}/filters && pipx install --force -e .

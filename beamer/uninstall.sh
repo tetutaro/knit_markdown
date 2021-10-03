@@ -13,4 +13,4 @@ cd ${local_image_path}
 for file in *.png; do
 	rm ${texmf_image_path}/${file}
 done
-sudo mktexlsr
+mktexlsr
