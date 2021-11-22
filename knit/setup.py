@@ -5,15 +5,15 @@ from setuptools import setup, find_packages
 
 def setup_package() -> None:
     metadata = dict()
-    metadata['name'] = 'knit_markdown'
-    metadata['version'] = '0.2.0'
+    metadata['name'] = 'knit-markdown'
+    metadata['version'] = '0.2.1'
     metadata['description'] = 'convert from markdown(tex) to PDF'
     metadata['author'] = 'tetutaro'
     metadata['url'] = 'https://github.com/tetutaro/knit_markdown'
     metadata['py_modules'] = ['knit']
     metadata['entry_points'] = {
         'console_scripts': [
-            'knit_markdown = knit:main',
+            'knit-markdown = knit:main',
         ],
     }
     metadata['packages'] = find_packages()

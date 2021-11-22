@@ -38,8 +38,8 @@ def convert(bname: str, ext: str) -> None:
             cmd = ' '.join([
                 'pandoc',
                 '--template=kmd',
-                '--filter=kmd_filter_crossref',
-                '--filter=kmd_filter_beamer',
+                '--filter=kmd-filter-crossref',
+                '--filter=kmd-filter-beamer',
                 '-t beamer {fname}',
                 '-o {bname}.tex',
                 '&&',
@@ -55,8 +55,8 @@ def convert(bname: str, ext: str) -> None:
             cmd = ' '.join([
                 'pandoc',
                 '--template=kmd169',
-                '--filter=kmd_filter_crossref',
-                '--filter=kmd_filter_beamer',
+                '--filter=kmd-filter-crossref',
+                '--filter=kmd-filter-beamer',
                 '-t beamer {fname}',
                 '-o {bname}.tex',
                 '&&',
@@ -72,8 +72,8 @@ def convert(bname: str, ext: str) -> None:
             cmd = ' '.join([
                 'pandoc -N',
                 '--template=kmd',
-                '--filter=kmd_filter_crossref',
-                '--filter=kmd_filter_latex',
+                '--filter=kmd-filter-crossref',
+                '--filter=kmd-filter-latex',
                 '-t latex {fname}',
                 '-o {bname}.tex',
                 '&&',
